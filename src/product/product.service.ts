@@ -12,9 +12,9 @@ export class ProductService {
         private productModel:mongoose.Model<Product>
     ){}
  
-    // pagination and search
+    // pagination and search 
     async findAll(query):Promise<Product[]>{
-        const resPerPage=2
+        const resPerPage=5
         const currentPage=Number(query.page)||1
         const skip=resPerPage*(currentPage-1)
         const keyword=query.keyword?{
