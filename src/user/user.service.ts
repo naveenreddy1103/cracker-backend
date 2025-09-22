@@ -18,7 +18,7 @@ export class UserService {
 
     async createUser(
         user:UserSignUpDto
-    ):Promise<{token:string}>{
+    ):Promise<{token:string,data:any}>{
         const {userName,fullName,email,phoneNumber,password}=user
         const hashedPassword=await bcrypt.hash(password,10)
         const verifyemail=await this.userModel.findOne({email:email})
@@ -38,13 +38,13 @@ export class UserService {
 
         const token=await this.jwtService.sign({id:data._id})
 
-        return {token:token}
+        return {token:token,data:data}
     }
 
 
     async signInUser(
         user:UserSignInDto
-    ):Promise<{token:string}>{
+    ):Promise<{token:string,data:any}>{
         const {email,password}=user
         const existingUser=await this.userModel.findOne({email:email})
         if(!existingUser){
@@ -55,7 +55,7 @@ export class UserService {
             throw new UnauthorizedException("invalid credentials")
         }
         const token=await this.jwtService.sign({id:existingUser._id})
-        return {token:token}
+        return {token:token,data:existingUser.userName}
     }
     
 }

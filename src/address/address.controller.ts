@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { Address } from './schemas/address.schema';
 import { AddressService } from './address.service';
@@ -35,6 +35,24 @@ export class AddressController {
         return this.addressService.updateAddress(id,address)
     } 
 
+
+    // get address by user
+    @Get()
+    @UseGuards(AuthGuard('jwt-user'))
+    async getAddressByUser(
+        @Req() Req
+    ):Promise<Address[]>{
+        return this.addressService.getAddressByUser(Req.user)
+    }
+
     
+    // delete address by id
+    @Delete(':id')
+    @UseGuards(AuthGuard('jwt-user'))
+    async deleteAddressById(
+        @Param('id') id:string
+    ):Promise<string>{
+        return this.addressService.deleteAddressById(id)
+    }
 
 }

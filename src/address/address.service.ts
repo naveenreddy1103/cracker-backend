@@ -57,4 +57,28 @@ export class AddressService {
     }
 
 
+    //get address by user
+
+    async getAddressByUser(
+        user:User
+    ):Promise<Address[]>{
+        const address=await this.addressModel.find({user:user._id})
+        if(!address){
+            throw new NotFoundException("address not found")
+        }
+        return address
+    }
+
+
+    // delete address by id
+    async deleteAddressById(
+        id:string
+    ):Promise<string>{
+        if(!mongoose.isValidObjectId(id)){
+            throw new BadRequestException("Invalid address ID")
+        }
+        await this.addressModel.findByIdAndDelete(id)
+        return "address deleted"
+    }
+
 }
