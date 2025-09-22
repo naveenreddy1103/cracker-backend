@@ -5,7 +5,7 @@ import { LoginDto } from './dto/login.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('auth')
+@Controller('vendor')
 export class AuthController {
     constructor(
         private authService:AuthService
