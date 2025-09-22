@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Auth } from './schemas/user.schema';
+import { Auth } from './schemas/vendor.schema';
 import mongoose from 'mongoose';
 import bcrypt from 'node_modules/bcryptjs';
 import { JwtService } from '@nestjs/jwt';
@@ -77,5 +77,6 @@ export class AuthService {
         await user.save()
         return {message:"password changed successfully"}
     }
+
 
 }

@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { Product } from './schemas/product.schema';
 import * as mongoose from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Auth } from 'src/auth/schemas/user.schema';
+import { Auth } from 'src/auth/schemas/vendor.schema';
 
 @Injectable()
 
@@ -36,7 +36,7 @@ export class ProductService {
         user:Auth
     ):Promise<Product>{
 
-        const data=Object.assign(product,{user:user._id})
+        const data=Object.assign(product,{auth:user._id})
 
         // console.log(data)
 
@@ -84,5 +84,16 @@ export class ProductService {
             throw new NotFoundException("Not deleted")
         }
         return `${productDelete} deleted`
+    }
+
+    // get vendor products
+    async getVendorProducts(
+        vendorId:string
+    ):Promise<Product[]>{
+        const products=await this.productModel.find({auth:vendorId})
+        if(!products){
+            throw new NotFoundException("No products found for this vendor")
+        }
+        return products
     }
 }

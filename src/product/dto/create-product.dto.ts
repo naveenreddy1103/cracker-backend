@@ -1,5 +1,5 @@
 import { IsEmpty, IsEnum, IsNotEmpty, IsNumber, IsString, MinLength } from "class-validator";
-import { Auth } from "src/auth/schemas/user.schema";
+import { Auth } from "src/auth/schemas/vendor.schema";
 
 
 export class CreateProductDto {
@@ -35,5 +35,5 @@ export class CreateProductDto {
     readonly category: string
 
     @IsEmpty({ message: "You can't pass user id" })
-    readonly user: Auth
+    readonly auth: Auth
 }

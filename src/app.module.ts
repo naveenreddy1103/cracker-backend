@@ -4,10 +4,11 @@ import { AppService } from './app.service';
 import { ProductModule } from './product/product.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './auth/vendor.module';
 import { UserModule } from './user/user.module';
 import { AddressModule } from './address/address.module';
 import { SuperAdminModule } from './super-admin/super-admin.module';
+import { OrdersModule } from './orders/orders.module';
 
 
 
@@ -22,7 +23,8 @@ import { SuperAdminModule } from './super-admin/super-admin.module';
     AuthModule,
     UserModule,
     AddressModule,
-    SuperAdminModule,],
+    SuperAdminModule,
+    OrdersModule,],
   controllers: [AppController],
   providers: [AppService],
 })

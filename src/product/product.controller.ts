@@ -32,7 +32,7 @@ export class ProductController {
 
     // getting product by id
     @Get(':id')
-    @UseGuards(AuthGuard('jwt-auth'))
+    // @UseGuards(AuthGuard('jwt-auth'))
     async getProductById(
         @Param('id')
         id:string
@@ -60,5 +60,15 @@ export class ProductController {
         id:string
     ):Promise<string>{
         return this.productService.deleteById(id)
+    }
+
+
+    // getting products by vendor id
+    @Get()
+    @UseGuards(AuthGuard('jwt-auth'))
+    async getVendorProducts(
+        @Req() req
+    ):Promise<Product[]>{
+        return this.productService.getVendorProducts(req.user._id)
     }
 }

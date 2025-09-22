@@ -1,5 +1,5 @@
 import { Body, Controller, Patch, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { AuthService } from './vendor.service';
 import { SignUpDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
