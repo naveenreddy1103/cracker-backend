@@ -21,7 +21,7 @@ export class Product{
     brandName:String
 
     @Prop()
-    imagePath:String
+    images?:object[]
 
     @Prop()
     orignalPrice:number

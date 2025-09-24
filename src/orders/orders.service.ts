@@ -23,35 +23,25 @@ export class OrdersService {
     // create order
     async createOrder(
         order: CreateOrderDto,
-        productId: string,
-        user: User,
-        // addressId:string
+        user: User
     ): Promise<any> {
+        // Validate product IDs
+        const products = await this.productModel.find({
+            _id: { $in: order.products }
+        });
 
-
-        const productObjectId = await this.productModel.findOne({ _id: new mongoose.Types.ObjectId(productId) });
-
-        if (!productObjectId) {
-            throw new UnauthorizedException("Product not found")
+        if (products.length !== order.products.length) {
+            throw new UnauthorizedException('One or more products not found');
         }
 
-        // destructuring order dto
-        const { orderId, orderDate, deliveryAddress, status, subTotal, shippingCharge, totalAmount } = order
         const data = await this.orderModel.create({
-            orderId,
-            orderDate,
-            deliveryAddress,
-            status: "processing",
-            subTotal,
-            shippingCharge,
-            totalAmount,
-            productId: productObjectId._id,
-            userId: user,
-            // addressId:addressObjectId._id,
-            authId: productObjectId.auth
-        })
-        return data
+            ...order,
+            products: order.products, // Store array of product ObjectIds
+            userId: user._id,
+            status: 'processing'
+        });
 
+        return data;
     }
 
     // cancel order
@@ -73,7 +63,7 @@ export class OrdersService {
         user:User
     ):Promise<Orders[]>{
         const orders=await this.orderModel.find({userId:user._id})
-        .populate('productId')
+        .populate('products')
         if(!orders){
             throw new NotFoundException("orders not found")
         }
@@ -124,7 +114,7 @@ export class OrdersService {
         auth:Auth
     ):Promise<Orders[]>{
         const orders=await this.orderModel.find({authId:auth._id})
-        .populate('productId')
+        .populate('products')
         if(!orders){
             throw new NotFoundException("orders not found")
         }

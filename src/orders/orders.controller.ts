@@ -10,16 +10,15 @@ export class OrdersController {
         private orderService:OrdersService
     ){}
 
-    @Post('/:productId')
+    @Post()
     @UseGuards(AuthGuard('jwt-user'))
     async createOrder(
         @Body()
         orders:CreateOrderDto,
-        @Param('productId') productId:string,
         // @Param('addressId') addressId:string,
         @Req() req
     ):Promise<any>{
-        return this.orderService.createOrder(orders,productId,req.user)
+        return this.orderService.createOrder(orders,req.user)
     }
 
     // cancel order
@@ -33,7 +32,7 @@ export class OrdersController {
     }
 
     // get all orders by user
-    @Get('user/allOrders')
+    @Get('/user/allOrders')
     @UseGuards(AuthGuard('jwt-user'))
     async getAllOrdersByUser(
         @Req() req

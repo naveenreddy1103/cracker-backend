@@ -1,4 +1,4 @@
-import { IsEmpty, IsEnum, IsNotEmpty, IsNumber, IsString, MinLength } from "class-validator";
+import { IsArray, IsEmpty, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, MinLength } from "class-validator";
 import { Auth } from "src/auth/schemas/vendor.schema";
 
 
@@ -17,9 +17,9 @@ export class CreateProductDto {
     @IsString()
     readonly brandName: String
 
-    @IsNotEmpty()
-    @IsString()
-    readonly imagePath: String
+    @IsOptional() // Because it's "images?" (optional)
+    @IsArray()
+    images?: object[];
 
     @IsNotEmpty()
     @IsNumber()

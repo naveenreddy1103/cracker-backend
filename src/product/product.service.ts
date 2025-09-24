@@ -3,6 +3,7 @@ import { Product } from './schemas/product.schema';
 import * as mongoose from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Auth } from 'src/auth/schemas/vendor.schema';
+import { uploadImages } from 'src/utils/aws';
 
 @Injectable()
 
@@ -96,4 +97,26 @@ export class ProductService {
         }
         return products
     }
+
+    
+    // upload product images
+    async uploadImages(
+        id:string,
+        files:Array<Express.Multer.File>
+    ){
+        const book=await this.productModel.findById(id)
+
+        if(!book){
+            throw new NotFoundException("Book not found")
+        }
+
+        const images=await uploadImages(files)
+
+        book.images=images as object[];
+
+        await book.save();
+        
+        return book;
+    }
+
 }
