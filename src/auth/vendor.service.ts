@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { User } from 'src/user/schemas/create-user.schema';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +41,7 @@ export class AuthService {
 
     async signIn(
         loginDto:LoginDto
-    ):Promise<{token:string}>{
+    ):Promise<{token:string,user:any}>{
         const {email,password}=loginDto
         const user=await this.userModel.findOne({email:email})
         if(!user){
@@ -53,7 +54,7 @@ export class AuthService {
 
         const token=await this.jwtService.sign({id:user._id})
 
-        return {token:token}
+        return {token:token,user:user}
     }
 
 
