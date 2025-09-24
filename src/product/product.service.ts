@@ -107,7 +107,7 @@ export class ProductService {
         const book=await this.productModel.findById(id)
 
         if(!book){
-            throw new NotFoundException("Book not found")
+            throw new NotFoundException("product not found")
         }
 
         const images=await uploadImages(files)
