@@ -55,7 +55,7 @@ export class UserService {
             throw new UnauthorizedException("invalid credentials")
         }
         const token=await this.jwtService.sign({id:existingUser._id})
-        return {token:token,data:existingUser.userName}
+        return {token:token,data:existingUser}
     }
     
 }
