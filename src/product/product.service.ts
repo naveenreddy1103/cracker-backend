@@ -15,7 +15,7 @@ export class ProductService {
  
     // pagination and search 
     async findAll(query):Promise<Product[]>{
-        const resPerPage=5      // results per page
+        const resPerPage=15      // results per page
         const currentPage=Number(query.page)||1
         const skip=resPerPage*(currentPage-1)
         const keyword=query.keyword?{
