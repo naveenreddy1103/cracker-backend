@@ -45,8 +45,6 @@ export class CreateOrderDto {
         @IsMongoId({ each: true })
         readonly products: string[];
 
-        // @IsEmpty({message:"we can't enter address id"})
-        // readonly addressId:Address
     
         @IsEmpty({message:"we can't enter auth id"})
         readonly authId:Auth
