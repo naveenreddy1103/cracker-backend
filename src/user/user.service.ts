@@ -19,6 +19,7 @@ export class UserService {
     async createUser(
         user:UserSignUpDto
     ):Promise<{token:string,data:any}>{
+        const userRequiredData="userName fullName email phoneNumber"
         const {userName,fullName,email,phoneNumber,password}=user
         const hashedPassword=await bcrypt.hash(password,10)
         const verifyemail=await this.userModel.findOne({email:email})

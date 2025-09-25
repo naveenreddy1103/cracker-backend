@@ -23,12 +23,35 @@ export class ProductController {
 
     @Post()
     @UseGuards(AuthGuard('jwt-auth'))
+    @UseInterceptors(FilesInterceptor('files'))
     async createProduct(
         @Body()
-        product:CreateProductDto,
+        body:any,
         @Req() req,
+        @UploadedFiles(
+            // validation for images by using pipes
+            new ParseFilePipeBuilder()
+            .addFileTypeValidator({
+              fileType:/(jpg|jpeg)$/,
+            })
+            .addMaxSizeValidator({
+                maxSize:1000*1000,
+                message:"Max size image 1mb"
+            })
+            .build({
+                errorHttpStatusCode:HttpStatus.UNPROCESSABLE_ENTITY
+            })
+
+        ) files:Array<Express.Multer.File>
     ):Promise<Product>{
-      return this.productService.createProduct(product,req.user)
+        // ✅ Manually transform body to CreateProductDto
+    const productDto: CreateProductDto = {
+      ...body,
+      productId: Number(body.productId),
+      orignalPrice: Number(body.orignalPrice),
+      discountPrice: Number(body.discountPrice),
+    };
+      return this.productService.createProduct(productDto,req.user,files)
     }
 
     // getting product by id

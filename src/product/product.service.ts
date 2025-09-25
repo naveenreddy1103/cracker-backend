@@ -34,12 +34,16 @@ export class ProductService {
     // create product
     async createProduct(
         product:Product,
-        user:Auth
+        user:Auth,
+        files:Array<Express.Multer.File>
     ):Promise<Product>{
+        const images=await uploadImages(files)
 
-        const data=Object.assign(product,{auth:user._id})
+        const data=Object.assign(product,{
+            auth:user._id,
+            images:images as object[] // or proper image type
+        })
 
-        // console.log(data)
 
        const res= await this.productModel.create(data)
        return res
