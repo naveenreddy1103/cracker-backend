@@ -5,8 +5,9 @@ import { Auth } from "src/auth/schemas/vendor.schema";
 export class CreateProductDto {
 
 
-    @IsNotEmpty()
+    
     @IsNumber()
+    @IsOptional()
     readonly productId: number
 
     @IsNotEmpty()

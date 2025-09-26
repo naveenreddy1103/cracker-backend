@@ -12,7 +12,7 @@ import { Auth } from "../../auth/schemas/vendor.schema";
 
 export class Product{
     @Prop()
-    productId:number
+    productId?:number
 
     @Prop()
     productName:String

@@ -4,6 +4,7 @@ import * as mongoose from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Auth } from 'src/auth/schemas/vendor.schema';
 import { uploadImages } from 'src/utils/aws';
+import * as XLSX from 'xlsx';
 
 @Injectable()
 
@@ -12,6 +13,43 @@ export class ProductService {
         @InjectModel(Product.name)
         private productModel:mongoose.Model<Product>
     ){}
+
+
+async importFromExcel(file: Express.Multer.File, user: Auth): Promise<any> {
+  // 1️⃣ Read buffer
+  const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+
+  // 2️⃣ Pick first sheet
+  const sheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[sheetName];
+
+  // 3️⃣ Convert sheet to JSON
+  const rows: any[] = XLSX.utils.sheet_to_json(worksheet);
+
+  // 4️⃣ Map rows to product DTOs
+  const products = rows.map(row => {
+    const product: any = {
+      productName: String(row.productName || ''),  // required
+      brandName: String(row.brandName || ''),      // required
+      orignalPrice: Number(row.orignalPrice || 0),
+      discountPrice: Number(row.discountPrice || 0),
+      category: String(row.category || ''),
+      auth: user._id,
+      images: [] // handle images separately if needed
+    };
+
+    // ✅ Make productId optional
+    if (row.productId) {
+      product.productId = Number(row.productId);
+    }
+
+    return product;
+  });
+
+  // 5️⃣ Bulk insert
+  return await this.productModel.insertMany(products);
+}
+
  
     // pagination and search 
     async findAll(query):Promise<Product[]>{

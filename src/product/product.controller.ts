@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, ParseFilePipeBuilder, Patch, Post, Put, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, ParseFilePipeBuilder, Patch, Post, Put, Query, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './schemas/product.schema';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import multer from 'multer';
 
 
 
@@ -23,6 +24,7 @@ export class ProductController {
         return this.productService.findAll(query)
     }
 
+    // creating product
     @Post()
     @UseGuards(AuthGuard('jwt-auth'))
     @UseInterceptors(FilesInterceptor('files'))
@@ -55,6 +57,16 @@ export class ProductController {
     };
       return this.productService.createProduct(productDto,req.user,files)
     }
+
+    
+
+// upload bulk data
+    @Post('upload-excel')
+  @UseGuards(AuthGuard('jwt-auth'))
+  @UseInterceptors(FileInterceptor('file', { storage: multer.memoryStorage() }))
+  async uploadExcel(@UploadedFile() file: Express.Multer.File, @Req() req) {
+    return this.productService.importFromExcel(file, req.user);
+  }
 
     // getting product by id
     @Get(':id')
