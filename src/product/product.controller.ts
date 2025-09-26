@@ -16,8 +16,10 @@ export class ProductController {
     @Get()
     async getAllProducts(
         @Query()
-        query
+        query,
+        @Req() req,
     ):Promise<Product[]>{
+        console.log(req)
         return this.productService.findAll(query)
     }
 

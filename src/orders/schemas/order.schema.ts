@@ -51,9 +51,15 @@ export class Orders{
     @Prop({type:mongoose.Schema.Types.ObjectId,ref:'User'})
     userId:User
 
-    @Prop({type:[mongoose.Schema.Types.ObjectId],ref:'Product'})
-    products:Product[]
-
+    @Prop([{
+        product:{type:mongoose.Schema.Types.ObjectId,ref:'Product'},
+        quantity:{type:Number,required:true}
+    }])
+    products:{
+        product:Product;
+        quantity:number
+    }[];
+    
     // @Prop({type:mongoose.Schema.Types.ObjectId,ref:'Address'})
     // addressId:Address
 

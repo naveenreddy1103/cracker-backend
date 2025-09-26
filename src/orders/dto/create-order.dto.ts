@@ -2,7 +2,7 @@ import { User } from "src/user/schemas/create-user.schema"
 import { status } from "../schemas/order.schema"
 import { Product } from "src/product/schemas/product.schema"
 import { Auth } from "src/auth/schemas/vendor.schema"
-import { ArrayNotEmpty, IsArray, IsDate, IsEmpty, IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsString } from "class-validator"
+import { ArrayNotEmpty, IsArray, IsDate, IsEmpty, IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsString, ValidateNested } from "class-validator"
 import { Type } from "class-transformer"
 // import { Address } from "src/address/schemas/address.schema"
 
@@ -41,11 +41,20 @@ export class CreateOrderDto {
         readonly userId:User
     
         @IsArray()
-        @ArrayNotEmpty()
-        @IsMongoId({ each: true })
-        readonly products: string[];
+        @ValidateNested({each:true})
+        @Type(()=>OrderProductDto)
+        products:OrderProductDto[]
 
-    
         @IsEmpty({message:"we can't enter auth id"})
         readonly authId:Auth
+}
+
+export class OrderProductDto{
+        @IsNotEmpty()
+        @IsString()
+        product:string;  //product ObjectId
+
+        @IsNotEmpty()
+        @IsNumber()
+        quantity:number
 }

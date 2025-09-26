@@ -25,18 +25,25 @@ export class OrdersService {
         order: CreateOrderDto,
         user: User
     ): Promise<any> {
+
+        // Extract productsIds from order
+        const productIds=order.products.map(item=>item.product)
+
         // Validate product IDs
         const products = await this.productModel.find({
-            _id: { $in: order.products }
+            _id: { $in: productIds }
         });
 
-        if (products.length !== order.products.length) {
+        if (products.length !== productIds.length) {
             throw new UnauthorizedException('One or more products not found');
         }
 
         const data = await this.orderModel.create({
             ...order,
-            products: order.products, // Store array of product ObjectIds
+            products: order.products.map(item=>({
+                product:item.product,
+                quantity:item.quantity
+            })), // Store array of product ObjectIds
             userId: user._id,
             status: 'processing'
         });
