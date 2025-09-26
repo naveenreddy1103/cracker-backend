@@ -70,7 +70,7 @@ export class OrdersService {
         user:User
     ):Promise<Orders[]>{
         const orders=await this.orderModel.find({userId:user._id})
-        .populate('products')
+        .populate('products.product')
         if(!orders){
             throw new NotFoundException("orders not found")
         }
@@ -121,7 +121,7 @@ export class OrdersService {
         auth:Auth
     ):Promise<Orders[]>{
         const orders=await this.orderModel.find({authId:auth._id})
-        .populate('products')
+        .populate('products.product')
         if(!orders){
             throw new NotFoundException("orders not found")
         }
