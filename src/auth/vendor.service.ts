@@ -17,7 +17,7 @@ export class AuthService {
         private jwtService:JwtService
     ){}
 
-   async signUp(signUpDto:SignUpDto):Promise<{token:string}>{
+   async signUp(signUpDto:SignUpDto):Promise<{message:string[]}>{
          const {name,email,password}=signUpDto
          const verifyUser=await this.userModel.findOne({email:email})
          if(verifyUser){
@@ -32,8 +32,8 @@ export class AuthService {
             password:hashedPassword
          })
 
-         const token=await this.jwtService.sign({id:user._id})
-         return {token:token}
+        //  const token=await this.jwtService.sign({id:user._id})
+         return {message:[user.email,user.name]}
     }
 
 

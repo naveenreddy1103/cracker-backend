@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { SuperAdminSchema } from './schema/super-admin.schema';
 import { JwtConfigModule } from 'src/config/jwt.config';
 import { PassportModule } from '@nestjs/passport';
+import { JwtStrategySuperAdmin } from './jwt.strategy';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { PassportModule } from '@nestjs/passport';
     PassportModule.register({defaultStrategy:'jwt'}),
     JwtConfigModule
   ],
-  providers: [SuperAdminService],
-  controllers: [SuperAdminController]
+  providers: [SuperAdminService,JwtStrategySuperAdmin],
+  controllers: [SuperAdminController],
+  exports:[JwtStrategySuperAdmin,PassportModule]
 })
 export class SuperAdminModule {}

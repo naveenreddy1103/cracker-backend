@@ -11,11 +11,13 @@ export class AuthController {
         private authService:AuthService
     ){}
 
+
     @Post('signup')
+    @UseGuards(AuthGuard('jwt-superadmin'))
     signIn(
         @Body() 
         signUpDto:SignUpDto
-    ):Promise<{token:string}>{
+    ):Promise<{message:string[]}>{
        return this.authService.signUp(signUpDto)
     }
 
