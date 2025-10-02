@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Product } from './schemas/product.schema';
 import * as mongoose from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -16,17 +16,17 @@ export class ProductService {
 
 
 async importFromExcel(file: Express.Multer.File, user: Auth): Promise<any> {
-  // 1️⃣ Read buffer
+  //  Read buffer
   const workbook = XLSX.read(file.buffer, { type: 'buffer' });
 
-  // 2️⃣ Pick first sheet
+  //  Pick first sheet
   const sheetName = workbook.SheetNames[0];
   const worksheet = workbook.Sheets[sheetName];
 
-  // 3️⃣ Convert sheet to JSON
+  //  Convert sheet to JSON
   const rows: any[] = XLSX.utils.sheet_to_json(worksheet);
 
-  // 4️⃣ Map rows to product DTOs
+  //  Map rows to product DTOs
   const products = rows.map(row => {
     const product: any = {
       productName: String(row.productName || ''),  // required
@@ -38,7 +38,7 @@ async importFromExcel(file: Express.Multer.File, user: Auth): Promise<any> {
       images: [] // handle images separately if needed
     };
 
-    // ✅ Make productId optional
+    //  Make productId optional
     if (row.productId) {
       product.productId = Number(row.productId);
     }
@@ -46,7 +46,7 @@ async importFromExcel(file: Express.Multer.File, user: Auth): Promise<any> {
     return product;
   });
 
-  // 5️⃣ Bulk insert
+  //  Bulk insert
   return await this.productModel.insertMany(products);
 }
 
@@ -66,6 +66,9 @@ async importFromExcel(file: Express.Multer.File, user: Auth): Promise<any> {
         .find({...keyword})
         .limit(resPerPage)
         .skip(skip)
+        if(!products){
+            throw new UnauthorizedException("vendor id mismatch")
+        }
         return products;
     }
 

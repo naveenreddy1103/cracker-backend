@@ -16,11 +16,9 @@ export class ProductController {
     // getting all products with filter and pagination
     @Get()
     async getAllProducts(
-        @Query()
-        query,
-        @Req() req,
+        @Query() query   
     ):Promise<Product[]>{
-        console.log(req)
+        // console.log(req)
         return this.productService.findAll(query)
     }
 
